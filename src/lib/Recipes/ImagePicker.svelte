@@ -20,6 +20,7 @@
       await uploadBytes(imgRef, file);
       image = await getDownloadURL(imgRef);
     } else {
+      // TODO realtime database: set unsaved image
       await deleteObject(imgRef).catch(() => null);
       image = null;
     }
