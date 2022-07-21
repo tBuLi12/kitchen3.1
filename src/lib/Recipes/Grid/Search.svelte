@@ -6,6 +6,6 @@
 </script>
 
 <Tags editable />
-<TextField bind:value label="search" />
-<Button variant="contained">filter</Button>
-<Button variant="contained">search</Button>
+<TextField --area="search" bind:value label="search" />
+<Button --area="tbut" variant="contained">filter</Button>
+<Button --area="sbut"variant="contained">search</Button>
