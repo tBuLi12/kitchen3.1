@@ -11,9 +11,9 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { db, storage } from "src/firebase/app";
-import { currAuth } from "src/firebase/user";
-import { getPreferringCache } from "src/firebase/utils";
+import { db, storage } from "../../firebase/app";
+import { currAuth } from "../../firebase/user";
+import { getPreferringCache } from "../../firebase/utils";
 import { push } from "svelte-spa-router";
 import { users } from "./collections";
 // import { getPreferringCache } from "src/firebase/utils";
@@ -23,8 +23,8 @@ export class RecipeHeader {
   name = "";
   description = "";
   tags: string[] = [];
-  image?: string;
-  link?: string;
+  image: string | null = null;
+  link: string | null = null;
 
   constructor(snapshot?: DocumentSnapshot<Omit<RecipeHeader, "ref">>) {
     if (snapshot) {
@@ -48,8 +48,6 @@ export class RecipeHeader {
   }
 
   async delete() {
-    const id = this.ref.id;
-
     deleteObject(this.imageRef).catch(() => null);
 
     const batch = writeBatch(db);
@@ -102,8 +100,10 @@ export class Recipe extends RecipeHeader implements RecipeBody {
     let bodyProm;
 
     if (userId) {
-      headerProm = getDoc(doc(users, userId, "headers", recipeId));
-      bodyProm = getDoc(doc(users, userId, "recipes", recipeId));
+      const userDoc = doc(users, userId);
+
+      headerProm = getDoc(doc(userDoc, "headers", recipeId));
+      bodyProm = getDoc(doc(userDoc, "recipes", recipeId));
     } else {
       headerProm = getPreferringCache(doc(headers!, recipeId));
       bodyProm = getDoc(doc(bodies!, recipeId));
