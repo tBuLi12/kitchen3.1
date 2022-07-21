@@ -44,14 +44,14 @@
   preferredVolumes.sort((a, b) => a.vol - b.vol);
 
   function fromMls(mls: number): string {
-    if (mls > 1000) {
+    if (mls >= 1000) {
       return `${mls / 1000} l`;
     }
     return `${mls} ml`;
   }
 
   function fromGrams(g: number): string {
-    if (g > 1000) {
+    if (g >= 1000) {
       return `${(g / 1000).toPrecision(2)} kg`;
     }
     return `${g.toPrecision(2)} g`;
