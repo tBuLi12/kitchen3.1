@@ -5,7 +5,7 @@
   import Thumbnail from "../Thumbnail.svelte";
   import Search from "./Search.svelte";
   import { push } from "svelte-spa-router";
-  import { headers } from "src/lib/data/recipe";
+  import { headers } from "../../data/recipe";
 
   const recipes$ = collectionData(headers!);
 </script>
