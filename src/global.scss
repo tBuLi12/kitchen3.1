@@ -117,3 +117,9 @@ input[type="number"] {
 .var-area {
   grid-area: var(--area);
 }
+
+.link {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}

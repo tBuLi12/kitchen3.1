@@ -87,10 +87,4 @@
   span {
     text-align: center;
   }
-
-  .link {
-    color: blue;
-    cursor: pointer;
-    text-decoration: underline;
-  }
 </style>
