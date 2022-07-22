@@ -118,12 +118,16 @@ export class Recipe extends RecipeHeader implements RecipeBody {
   }
 
   async save() {
-    const batch = writeBatch(db);
-
-    batch.set(this.ref, extractHeaderData(this));
-    batch.set(this.bodyRef, extractBodyData(this));
-
-    await batch.commit();
+    if (this.link) {
+      await setDoc(this.ref, extractHeaderData(this));
+    } else {
+      const batch = writeBatch(db);
+  
+      batch.set(this.ref, extractHeaderData(this));
+      batch.set(this.bodyRef, extractBodyData(this));
+  
+      await batch.commit();
+    }
   }
 }
 

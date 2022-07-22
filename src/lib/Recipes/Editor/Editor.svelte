@@ -11,10 +11,13 @@
 
   export let recipe: Recipe;
 
+  let linkMode = !!recipe.link;
   let saving = false;
+
+  let link = "";
 </script>
 
-<div class="mdc-card">
+<div class="mdc-card" class:show-dir={!linkMode}>
   <div class="edit-title">Edit Recipe</div>
   <TextField --area="name" bind:value={recipe.name} label="name" />
   <TextField
@@ -27,17 +30,33 @@
     <span>Portions:</span>
     <Portions bind:servingSize={recipe.portions} />
   </div>
-  <div class="dir-title">Directions</div>
-  <TextArea --area="text" bind:value={recipe.text} />
+  <div class="dir-title">
+    {linkMode ? "Link" : "Directions"}
+    <span class="link" on:click={() => linkMode = !linkMode}>
+      provide {linkMode ? "directions" : "a link"} instead
+    </span>
+  </div>
+  {#if linkMode}
+    <TextField --area="text" label="link" bind:value={link} />
+  {:else}
+    <TextArea --area="text" bind:value={recipe.text} />
+  {/if}
   <div class="spacer" />
   <ImagePicker imgRef={recipe.imageRef} bind:image={recipe.image} />
-  <Ingredients editable servingSize={1} bind:ingredients={recipe.ingredients} />
+  {#if !linkMode}
+    <Ingredients editable servingSize={1} bind:ingredients={recipe.ingredients} />
+  {/if}
   <div class="save">
     <Button variant="outlined" on:click={() => history.back()}>cancel</Button>
     <Button
       variant="contained"
       on:click={async () => {
         saving = true;
+        
+        if (link) {
+          recipe.link = link;
+        }
+
         await recipe.save();
         history.back();
       }}
@@ -59,9 +78,12 @@
   .dir-title {
     font-size: 1.5rem;
     grid-area: dir-title;
-    padding-top: 20px;
     border-top: 1px solid rgb(175, 175, 175);
-    padding-left: 10px;
+    padding: 0 10px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .portions {
@@ -81,7 +103,7 @@
       "name       description description" auto
       "tags       tags        portions" auto
       "dir-title  dir-title   dir-title" auto
-      "text       text        text" 400px
+      "text       text        text" auto
       "spacer     spacer      spacer" auto
       "upload     loading     ingredients" auto
       "image      image       ingredients" auto
@@ -105,5 +127,14 @@
     background-color: rgb(175, 175, 175);
     height: 1px;
     grid-area: spacer;
+  }
+
+  .link {
+    /* float: right; */
+    font-size: 0.9rem;
+  }
+
+  .show-dir :global(textarea) {
+    height: 400px;
   }
 </style>
