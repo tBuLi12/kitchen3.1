@@ -85,6 +85,7 @@ input[type="number"] {
 
   & > .img {
     grid-area: image;
+    cursor: pointer;
   }
 
   img {
