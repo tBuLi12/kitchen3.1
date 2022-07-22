@@ -1,5 +1,5 @@
 <div>
-  <i class="material-icons">edit</i>
+  <i class="material-icons-outlined">soup_kitchen</i>
   <span>no image</span>
 </div>
 
@@ -13,14 +13,15 @@
     flex-direction: column;
   }
 
-  span,
   i {
-    color: rgb(145, 145, 145);
+    color: rgb(199, 199, 199);
+    font-size: 2rem;
   }
-
+  
   span {
-    font-size: 0.7rem;
-    letter-spacing: 0.15rem;
+    color: rgb(162, 162, 162);
+    font-size: 0.65rem;
+    letter-spacing: 0.1rem;
     text-transform: uppercase;
   }
 </style>
