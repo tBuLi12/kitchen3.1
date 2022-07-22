@@ -31,9 +31,3 @@
     <IconButton>share</IconButton>
   </div>
 </div>
-
-<style>
-  .thumbnail > :global(div:not(.icons)) {
-    grid-area: image;
-  }
-</style>
