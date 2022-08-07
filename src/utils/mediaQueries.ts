@@ -19,3 +19,7 @@ export const breakpoint = merge(
       ),
   })
 );
+
+breakpoint.subscribe(console.log);
+
+// TODO adding ingredient already on list

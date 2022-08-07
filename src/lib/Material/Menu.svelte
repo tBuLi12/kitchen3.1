@@ -1,8 +1,8 @@
 <script lang="ts">
   import { MDCMenu } from "@material/menu";
 
-  let openMenu = () => null;
-  let closeMenu = () => null;
+  let openMenu = () => true;
+  let closeMenu = () => true;
 
   export function open() {
     openMenu();

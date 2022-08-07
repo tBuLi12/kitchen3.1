@@ -84,7 +84,7 @@
     return ingredient.amount * mult + " " + (ingredient.unit ?? "");
   }
 
-  const ingRexEx = /^\S* \d+((\.|\/)\d+)?( \S+)?$/u;
+  const ingRegEx = /^\S* \d+((\.|\/)\d+)?( \S+)?$/u;
 
   function parseAmount(amtStr: string): number {
     const [top, bot] = amtStr.split("/");
@@ -95,7 +95,7 @@
   }
 
   function parseIngredient(ingStr: string): Ingredient | null {
-    if (ingRexEx.test(ingStr)) {
+    if (ingRegEx.test(ingStr)) {
       const [name, amountStr, unit] = ingStr.split(" ") as [
         string,
         string,
@@ -137,6 +137,11 @@
   function addIngredient(): boolean {
     const ingredient = parseIngredient(ingredientStr);
     if (ingredient) {
+      const i = ingredients.findIndex((ing) => ing.name == ingredient.name);
+      // if (i > 0) {
+      //   ingredients[i] =
+      // } else {
+      // }
       ingredients = [ingredient, ...ingredients];
       ingredientStr = "";
       return true;
@@ -163,7 +168,7 @@
       <input
         class="mdc-text-field__input"
         bind:value={ingredientStr}
-        pattern={ingRexEx.source}
+        pattern={ingRegEx.source}
         on:keydown={onInputKeydown}
       />
     </TextFieldOutlinedBase>
@@ -198,6 +203,7 @@
     display: flex;
     align-items: center;
   }
+
   .outer {
     grid-area: ingredients;
     margin-top: -15px;
@@ -209,6 +215,12 @@
       "table  table" 1fr
       / 1fr auto;
   }
+  @media (min-width: 600px) {
+    .outer {
+      max-width: 230px;
+    }
+  }
+
   .outer.editable {
     margin-top: 0;
     grid:
@@ -230,12 +242,14 @@
     grid-area: portions;
   }
 
-  .tab > :global(div) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+  @media (min-width: 900px) {
+    .tab > :global(div) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+    }
   }
 
   .tab :global(table) {

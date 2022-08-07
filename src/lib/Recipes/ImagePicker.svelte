@@ -23,27 +23,28 @@
       // TODO realtime database: set unsaved image
       await deleteObject(imgRef).catch(() => null);
       image = null;
+      input.value = "";
     }
   }
 </script>
 
-<Button --area="upload" variant="contained" on:click={() => input.click()}
-  >upload image</Button
->
-<input
-  id="upload-image-input"
-  type="file"
-  accept="image/*"
-  on:input={setImage}
-  bind:this={input}
-/>
-{#if image}
-  <Button --area="loading" on:click={setImage}>remove</Button>
-{/if}
-<div>
+<div class="buttons">
+  <Button variant="contained" on:click={() => input.click()}
+    >upload image</Button
+  >
+  <input
+    id="upload-image-input"
+    type="file"
+    accept="image/*"
+    on:input={setImage}
+    bind:this={input}
+  />
   {#if image}
-    <img src={image} alt="dish" />
-  {:else}
+    <Button on:click={setImage}>remove</Button>
+  {/if}
+</div>
+<div style:background-image="url({image})" class="img">
+  {#if !image}
     <NoImage />
   {/if}
 </div>
@@ -53,17 +54,36 @@
     display: none;
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  div {
+  .img {
     margin-top: -5px;
     border-radius: 5px;
     border: solid 1px rgb(175, 175, 175);
     aspect-ratio: 1;
     grid-area: image;
+    background-size: cover;
+  }
+
+  .buttons {
+    grid-area: upload;
+    display: flex;
+    gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .buttons > :global(*) {
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+  }
+
+  @media (max-width: 700px) and (min-width: 600px), (max-width: 400px) {
+    .buttons {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .buttons > :global(*) {
+      flex-basis: unset;
+    }
   }
 </style>

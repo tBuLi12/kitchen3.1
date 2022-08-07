@@ -1,11 +1,11 @@
 <script lang="ts" context="module">
-  export interface RecipeHeader {
-    name: string;
-    description: string;
-    tags: string[];
-    image?: string;
-    link?: string;
-  }
+  // export interface RecipeHeader {
+  //   name: string;
+  //   description: string;
+  //   tags: string[];
+  //   image?: string;
+  //   link?: string;
+  // }
 </script>
 
 <script lang="ts">

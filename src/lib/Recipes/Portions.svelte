@@ -1,7 +1,7 @@
 <script lang="ts">
   import Button from "../Material/Buttons/Button.svelte";
   export let servingSize: number;
-  let value: number | null = servingSize;
+  let value: number = servingSize;
 
   $: if (value > 0) {
     servingSize = value;

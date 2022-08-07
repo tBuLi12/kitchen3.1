@@ -3,7 +3,7 @@
 
   export let name: string;
   export let description: string;
-  export let image: string | undefined;
+  export let image: string | null = null;
 </script>
 
 <div class="mdc-card">
