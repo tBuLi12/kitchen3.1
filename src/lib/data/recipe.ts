@@ -15,11 +15,10 @@ import { db, storage } from "../../firebase/app";
 import { currAuth } from "../../firebase/user";
 import { getPreferringCache } from "../../firebase/utils";
 import { push } from "svelte-spa-router";
-import { users } from "./collections";
+import { OwnedDoc, users } from "./collections";
 // import { getPreferringCache } from "src/firebase/utils";
 
-export class RecipeHeader {
-  ref: DocumentReference;
+export class RecipeHeader extends OwnedDoc {
   name = "";
   description = "";
   tags: string[] = [];
@@ -27,16 +26,11 @@ export class RecipeHeader {
   link: string | null = null;
 
   constructor(snapshot?: DocumentSnapshot<Omit<RecipeHeader, "ref">>) {
+    super(snapshot?.ref ?? doc(headers!));
+
     if (snapshot) {
       Object.assign(this, snapshot.data());
-      this.ref = snapshot.ref;
-    } else {
-      this.ref = doc(headers!);
     }
-  }
-
-  get owner() {
-    return this.ref.parent.parent!;
   }
 
   get bodyRef() {
@@ -48,14 +42,15 @@ export class RecipeHeader {
   }
 
   async delete() {
-    deleteObject(this.imageRef).catch(() => null);
-
     const batch = writeBatch(db);
 
     batch.delete(this.ref);
     batch.delete(this.bodyRef);
 
-    await batch.commit();
+    await Promise.all([
+      batch.commit(),
+      deleteObject(this.imageRef).catch(() => null),
+    ]);
   }
 
   copyForCurrentUser() {
@@ -112,7 +107,7 @@ export class Recipe extends RecipeHeader implements RecipeBody {
     const [headerSnap, bodySnap] = await Promise.all([headerProm, bodyProm]);
 
     const recipe = new Recipe(headerSnap as any);
-    Object.assign(recipe, bodySnap);
+    Object.assign(recipe, bodySnap.data());
 
     return recipe;
   }
@@ -122,10 +117,10 @@ export class Recipe extends RecipeHeader implements RecipeBody {
       await setDoc(this.ref, extractHeaderData(this));
     } else {
       const batch = writeBatch(db);
-  
+
       batch.set(this.ref, extractHeaderData(this));
       batch.set(this.bodyRef, extractBodyData(this));
-  
+
       await batch.commit();
     }
   }
