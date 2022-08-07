@@ -61,6 +61,8 @@
   main > div {
     background-color: rgb(241, 241, 241);
     flex-grow: 1;
+    padding: 0 20px;
+    min-width: 0;
   }
   /* span {
     margin-left: 5px;
