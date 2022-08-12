@@ -1,37 +1,34 @@
 <script lang="ts">
-  import {
-    collection as collRef,
-    CollectionReference,
-  } from "firebase/firestore";
-
-  import { collection } from "rxfire/firestore";
-  import { db } from "../../firebase/app";
-  import { user } from "../AuthGuard.svelte";
-
+  import { collectionData } from "rxfire/firestore";
+  import { Dish, dishes } from "../data/dish";
   import Fab from "../Material/Buttons/Fab.svelte";
   import ErrorGuard from "../Utils/ErrorGuard.svelte";
-
-  import DishThmubnail, { Dish } from "./Dish.svelte";
+  import DishThmubnail from "./Dish.svelte";
   import Editor from "./Editor.svelte";
 
-  const dishes = collection(
-    collRef(db, "users", $user.uid, "dishes") as CollectionReference<Dish>
-  );
-  // const dishes: Dish[] = [recipe, recipe, recipe, recipe, recipe, recipe];
+  const dishes$ = collectionData(dishes!);
+
   let editorOpen = false;
+  let editedDish = new Dish();
 </script>
 
-<ErrorGuard source={dishes} let:item={dishes}>
+<ErrorGuard source={dishes$} let:item={dishes}>
   {#if dishes}
     <div class="thumbnail-grid">
-      {#each dishes as dishDoc}
-        <DishThmubnail {dishDoc} />
+      {#each dishes as dish}
+        <DishThmubnail
+          {dish}
+          on:edit={(evt) => {
+            editedDish = evt.detail;
+            editorOpen = true;
+          }}
+        />
       {/each}
     </div>
     <Fab on:click={() => (editorOpen = true)} />
-    {#if editorOpen}
-      <Editor bind:isOpen={editorOpen} />
-    {/if}
+    <!-- {#if editorOpen} -->
+    <Editor bind:isOpen={editorOpen} dish={editedDish} />
+    <!-- {/if} -->
   {:else}
     loading
   {/if}

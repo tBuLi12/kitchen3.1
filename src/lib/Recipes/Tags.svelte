@@ -23,7 +23,7 @@
       "name button" auto
       "chips chips" auto
       / auto 1fr;
-    width: max-content;
+    /* width: max-content; */
     max-width: 100%;
     grid-area: tags;
   }

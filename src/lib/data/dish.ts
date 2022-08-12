@@ -5,6 +5,7 @@ import {
   DocumentReference,
   DocumentSnapshot,
   FirestoreDataConverter,
+  setDoc,
   Timestamp,
   WithFieldValue,
 } from "firebase/firestore";
@@ -20,7 +21,7 @@ export class Dish extends OwnedDoc {
   image: string | null = null;
   lastMade = new Date();
   recipe: DocumentReference | null = null;
-  link: string | null = null;
+  link = "";
   reflect: boolean = false;
 
   constructor(
@@ -47,6 +48,15 @@ export class Dish extends OwnedDoc {
 
   get imageRef() {
     return ref(storage, `${this.owner.id}/dishImages/${this.ref.id}`);
+  }
+
+  async save() {
+    await setDoc(this.ref, extractDishData(this));
+  }
+
+  deepcopy(): Dish {
+    const copied = new Dish();
+    return Object.assign(copied, this);
   }
 }
 

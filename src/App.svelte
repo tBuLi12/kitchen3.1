@@ -61,6 +61,7 @@
   main > div {
     background-color: rgb(241, 241, 241);
     flex-grow: 1;
+    flex-basis: 0;
     padding: 0 20px;
     min-width: 0;
   }

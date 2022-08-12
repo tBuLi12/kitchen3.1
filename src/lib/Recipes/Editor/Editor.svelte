@@ -32,7 +32,7 @@
   </div>
   <div class="dir-title">
     {linkMode ? "Link" : "Directions"}
-    <span class="link" on:click={() => linkMode = !linkMode}>
+    <span class="link" on:click={() => (linkMode = !linkMode)}>
       provide {linkMode ? "directions" : "a link"} instead
     </span>
   </div>
@@ -44,7 +44,11 @@
   <div class="spacer" />
   <ImagePicker imgRef={recipe.imageRef} bind:image={recipe.image} />
   {#if !linkMode}
-    <Ingredients editable servingSize={1} bind:ingredients={recipe.ingredients} />
+    <Ingredients
+      editable
+      servingSize={1}
+      bind:ingredients={recipe.ingredients}
+    />
   {/if}
   <div class="save">
     <Button variant="outlined" on:click={() => history.back()}>cancel</Button>
@@ -52,7 +56,7 @@
       variant="contained"
       on:click={async () => {
         saving = true;
-        
+
         if (link) {
           recipe.link = link;
         }
@@ -86,11 +90,15 @@
     align-items: center;
   }
 
+  .dir-title > span {
+    margin-left: 10px;
+  }
+
   .portions {
     grid-area: portions;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    gap: 10px;
     justify-self: right;
     padding-right: 20px;
   }
@@ -105,13 +113,47 @@
       "dir-title  dir-title   dir-title" auto
       "text       text        text" auto
       "spacer     spacer      spacer" auto
-      "upload     loading     ingredients" auto
+      "upload     upload      ingredients" auto
       "image      image       ingredients" auto
       "image      image       save" auto
       / auto 1fr auto;
     gap: 20px;
     padding: 20px;
-    width: 1000px;
+    width: min(1000px, 100%);
+  }
+
+  @media (max-width: 900px) {
+    .mdc-card {
+      grid:
+        "edit-title edit-title  edit-title" auto
+        "name       description description" auto
+        "tags       tags        portions" auto
+        "dir-title  dir-title   dir-title" auto
+        "text       text        text" auto
+        "spacer     spacer      spacer" auto
+        "upload     upload      ingredients" auto
+        "image      image       ingredients" auto
+        "image      image       save" auto
+        / auto 1fr auto;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .mdc-card {
+      grid:
+        "edit-title  edit-title" auto
+        "name        name" auto
+        "description description" auto
+        "tags        portions" auto
+        "dir-title   dir-title" auto
+        "text        text" auto
+        "spacer      spacer" auto
+        "upload      upload" auto
+        "image       image" auto
+        "ingredients ingredients" auto
+        "save        save" auto
+        / 1fr auto;
+    }
   }
 
   .save {
