@@ -58,12 +58,12 @@
   }
 
   function normalizeUnit(ingredient: Ingredient, mult: number): string {
-    if ("weight" in ingredient) {
-      return fromGrams(ingredient.weight * mult);
+    if (ingredient.unit == "g") {
+      return fromGrams(ingredient.amount * mult);
     }
 
-    if ("volume" in ingredient) {
-      const mls = ingredient.volume * mult;
+    if (ingredient.unit == "ml") {
+      const mls = ingredient.amount * mult;
       const i = preferredVolumes.findIndex(({ vol }) => mls < vol);
 
       if (i == -1) {
@@ -105,29 +105,15 @@
 
       const weightMult = asG[unit];
       if (weightMult) {
-        return { name, weight: weightMult * amount };
+        return { name, amount: weightMult * amount, unit: "g" };
       }
 
       const volMult = asMl[unit];
       if (volMult) {
-        return { name, volume: volMult * amount };
+        return { name, amount: volMult * amount, unit: "ml" };
       }
 
       return unit ? { name, amount, unit } : { name, amount };
-    }
-    return null;
-  }
-
-  function mergeIngredient(
-    ing1: Ingredient,
-    ing2: Ingredient
-  ): Ingredient | null {
-    if ("amount" in ing1 && "amount" in ing2) {
-      return { ...ing1, amount: ing1.amount + ing2.amount };
-    } else if ("weight" in ing1 && "weight" in ing2) {
-      return { ...ing1, weight: ing1.weight + ing2.weight };
-    } else if ("volume" in ing1 && "volume" in ing2) {
-      return { ...ing1, volume: ing1.volume + ing2.volume };
     }
     return null;
   }
@@ -153,12 +139,17 @@
     if (ingredient) {
       const i = ingredients.findIndex((ing) => ing.name == ingredient.name);
       if (i >= 0) {
-        let merged = mergeIngredient(ingredients[i]!, ingredient);
-        if (!merged) {
+        const other = ingredients[i]!;
+        if (other.unit == ingredient.unit) {
+          const newIngredients = [...ingredients];
+          newIngredients[i] = {
+            ...ingredient,
+            amount: ingredient.amount + other.amount,
+          };
+          ingredients = newIngredients;
+        } else {
           return false;
         }
-        ingredients[i] = merged;
-        ingredients = [...ingredients];
       } else {
         ingredients = [ingredient, ...ingredients];
       }

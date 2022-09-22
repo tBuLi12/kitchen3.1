@@ -69,11 +69,9 @@ export class RecipeHeader extends OwnedDoc {
 
 export type Ingredient = {
   name: string;
-} & (
-  | { amount: number; unit?: string }
-  | { weight: number }
-  | { volume: number }
-);
+  unit?: string;
+  amount: number;
+};
 
 export interface RecipeBody {
   text: string;
