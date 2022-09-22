@@ -10,6 +10,7 @@
 
   export let image: string | null = null;
   export let imgRef: StorageReference;
+  export let small = false;
 
   let input: HTMLInputElement;
 
@@ -28,7 +29,7 @@
   }
 </script>
 
-<div class="buttons">
+<div class="buttons" class:small>
   <Button variant="contained" on:click={() => input.click()}
     >upload image</Button
   >
@@ -61,12 +62,18 @@
     aspect-ratio: 1;
     grid-area: image;
     background-size: cover;
+    background-position: center;
   }
 
   .buttons {
     grid-area: upload;
     display: flex;
     gap: 10px;
+  }
+
+  .buttons.small > :global(*) {
+    flex-grow: 1;
+    flex-basis: 0;
   }
 
   @media (max-width: 900px) {
@@ -77,12 +84,12 @@
   }
 
   @media (max-width: 700px) and (min-width: 600px), (max-width: 400px) {
-    .buttons {
+    .buttons:not(.small) {
       flex-direction: column;
       gap: 15px;
     }
 
-    .buttons > :global(*) {
+    .buttons:not(.small) > :global(*) {
       flex-basis: unset;
     }
   }

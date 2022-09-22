@@ -5,6 +5,9 @@
   import IconButton from "../Material/Buttons/IconButton.svelte";
   import Menu from "../Material/Menu.svelte";
   import NoImage from "../Utils/NoImage.svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher<{ edit: Dish }>();
 
   export let dish: Dish;
 
@@ -16,7 +19,9 @@
   <span>{getDateStr(dish.lastMade)} </span>
   <IconButton on:click={() => menu.open()}
     >more_vert<Menu
-      items={[{ name: "edit", action: () => null }]}
+      items={[
+        { name: "edit", action: () => dispatch("edit", dish.deepcopy()) },
+      ]}
       bind:this={menu}
     /></IconButton
   >

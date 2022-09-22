@@ -16,13 +16,19 @@
   {#if dishes}
     <div class="thumbnail-grid">
       {#each dishes as dish}
-        <DishThmubnail {dish} />
+        <DishThmubnail
+          {dish}
+          on:edit={(evt) => {
+            editedDish = evt.detail;
+            editorOpen = true;
+          }}
+        />
       {/each}
     </div>
     <Fab on:click={() => (editorOpen = true)} />
-    {#if editorOpen}
-      <Editor bind:isOpen={editorOpen} dish={editedDish} />
-    {/if}
+    <!-- {#if editorOpen} -->
+    <Editor bind:isOpen={editorOpen} dish={editedDish} />
+    <!-- {/if} -->
   {:else}
     loading
   {/if}

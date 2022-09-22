@@ -6,45 +6,39 @@
   import Tags from "../Recipes/Tags.svelte";
   import DatePicker from "../Utils/DatePicker.svelte";
   import type { Dish } from "../data/dish";
+  import Spinner from "../Material/Spinner.svelte";
 
   export let isOpen = true;
   export let dish: Dish;
 
   let link = "";
+  let saving = false;
 </script>
 
 <Dialog bind:isOpen>
   <div class="outer">
     <span>Edit dish</span>
     <TextField bind:value={dish.name} label="name" />
-    {#if dish.recipe}
-      <input
-        type="checkbox"
-        bind:checked={dish.reflect}
-        on:input={async function () {
-          // if (this.checked) {
-          //   const recipeDoc = await getDocFromCache(recipe).catch(() =>
-          //     getDoc(recipe)
-          //   );
-          //   // relfect could have been unchecked while awaiting
-          //   if (reflect) {
-          //     ({ tags, name, image } = recipeDoc.data());
-          //   }
-          // }
-        }}
-      />
-    {:else}
-      <TextField bind:value={link} label="link" />
+    {#if !dish.recipe}
+      <TextField bind:value={dish.link} label="link" />
     {/if}
     <DatePicker bind:value={dish.lastMade} />
     <Tags editable bind:tags={dish.tags} />
-    <div class="spacer" />
-    <span>image</span>
-    <div class="image">
-      <ImagePicker imgRef={dish.imageRef} bind:image={dish.image} />
-    </div>
+    <ImagePicker imgRef={dish.imageRef} bind:image={dish.image} small />
     <div class="actions">
-      <Button variant="contained" on:click={() => null}>save</Button>
+      <Button
+        variant="contained"
+        on:click={async () => {
+          saving = true;
+          await dish.save();
+          saving = isOpen = false;
+        }}
+        >{#if saving}
+          <Spinner slot="spinner" />
+        {:else}
+          save
+        {/if}</Button
+      >
       <Button on:click={() => (isOpen = false)}>cancel</Button>
     </div>
   </div>
@@ -53,7 +47,8 @@
 <style lang="scss">
   .outer {
     display: flex;
-    width: 340px;
+    flex-direction: column;
+    width: 300px;
     padding: 20px;
     gap: 20px;
   }
@@ -66,28 +61,28 @@
       font-weight: 500;
     }
 
-    &:last-of-type {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      margin-top: -10px;
-    }
+    // &:last-of-type {
+    //   text-transform: uppercase;
+    //   font-size: 0.8rem;
+    //   margin-top: -10px;
+    // }
   }
   /* .mdc-dialog__surface > :global(div:first-of-type) {
   } */
-  .spacer {
-    width: 270px;
-    background-color: gray;
-    height: 1px;
-  }
+  // .spacer {
+  //   width: 270px;
+  //   background-color: gray;
+  //   height: 1px;
+  // }
 
-  .image {
-    display: grid;
-    grid:
-      "upload loading" auto
-      "image  image" auto
-      / auto 1fr;
-    gap: 10px;
-  }
+  // .image {
+  //   display: grid;
+  //   grid:
+  //     "upload loading" auto
+  //     "image  image" auto
+  //     / auto 1fr;
+  //   gap: 10px;
+  // }
 
   .actions {
     display: flex;

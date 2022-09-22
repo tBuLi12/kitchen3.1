@@ -117,6 +117,20 @@
     }
     return null;
   }
+
+  function mergeIngredient(
+    ing1: Ingredient,
+    ing2: Ingredient
+  ): Ingredient | null {
+    if ("amount" in ing1 && "amount" in ing2) {
+      return { ...ing1, amount: ing1.amount + ing2.amount };
+    } else if ("weight" in ing1 && "weight" in ing2) {
+      return { ...ing1, weight: ing1.weight + ing2.weight };
+    } else if ("volume" in ing1 && "volume" in ing2) {
+      return { ...ing1, volume: ing1.volume + ing2.volume };
+    }
+    return null;
+  }
 </script>
 
 <script lang="ts">
@@ -138,11 +152,16 @@
     const ingredient = parseIngredient(ingredientStr);
     if (ingredient) {
       const i = ingredients.findIndex((ing) => ing.name == ingredient.name);
-      // if (i > 0) {
-      //   ingredients[i] =
-      // } else {
-      // }
-      ingredients = [ingredient, ...ingredients];
+      if (i >= 0) {
+        let merged = mergeIngredient(ingredients[i]!, ingredient);
+        if (!merged) {
+          return false;
+        }
+        ingredients[i] = merged;
+        ingredients = [...ingredients];
+      } else {
+        ingredients = [ingredient, ...ingredients];
+      }
       ingredientStr = "";
       return true;
     }

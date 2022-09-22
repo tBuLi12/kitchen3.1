@@ -53,7 +53,7 @@ export class RecipeHeader extends OwnedDoc {
     ]);
   }
 
-  copyForCurrentUser() {
+  withNewRef() {
     this.ref = doc(headers!);
     return this;
   }
