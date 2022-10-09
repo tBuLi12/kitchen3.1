@@ -32,7 +32,7 @@
       <NoImage />
     {/if}
   </div>
-  <Button variant="outlined">done</Button>
+  <Button variant="outlined" on:click={() => dish.done()}>done</Button>
 </div>
 
 <style>

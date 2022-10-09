@@ -3,8 +3,7 @@
 );
 @use "@material/chips/styles";
 @use "material-components-web";
-// --mdc-theme-primary: #3f51b5;
-// --mdc-theme-secondary: #26c6da;
+
 html,
 body,
 #app {
@@ -74,7 +73,7 @@ input[type="number"] {
     }
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 400px) {
     grid:
       "search" auto
       "sbut" auto

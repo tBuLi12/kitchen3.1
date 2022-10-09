@@ -54,9 +54,14 @@ export class Dish extends OwnedDoc {
     await setDoc(this.ref, extractDishData(this));
   }
 
+  done() {
+    this.lastMade = new Date();
+    this.save();
+  }
+
   deepcopy(): Dish {
     const copied = new Dish();
-    return Object.assign(copied, this);
+    return Object.assign(copied, this, { tags: [...this.tags] });
   }
 }
 

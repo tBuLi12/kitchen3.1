@@ -48,7 +48,7 @@
   .outer {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: min(300px, 70vw);
     padding: 20px;
     gap: 20px;
   }
